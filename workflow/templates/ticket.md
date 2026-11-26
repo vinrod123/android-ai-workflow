@@ -1,6 +1,6 @@
 # Ticket: #<issue> <título>
 
-> Story: product-owner · Refinamento: developer · Check: planner
+> Story: product-owner · Refinamento: product-owner · Check: planner
 > Status: Rascunho / Refinado / Pronto (DoR ok) / Aprovado no P1 em <data>
 
 ## Story
@@ -38,10 +38,6 @@ Então <resultado observável>
 ## Requisitos não funcionais (mensuráveis)
 - <ex.: primeira renderização com cache em até 500ms>
 
-## Impacto no código (refinamento: o developer leu o código real)
-| Módulo / arquivo | O que muda | Tem testes hoje? |
-|------------------|------------|------------------|
-
 ## Dependências
 - <API, outra story, textos, assets, feature flag>
 
@@ -52,15 +48,13 @@ Então <resultado observável>
 - <...>
 
 ## Perguntas abertas
-- [ ] [negócio] <pergunta para o humano>
-- [ ] [técnico] <pergunta para o developer>
+- [ ] <pergunta para o humano>
 
 ## Definition of Ready (preenchido pelo planner)
 - [ ] Story com valor claro
 - [ ] ACs em Gherkin com ID, testáveis e observáveis
 - [ ] Estados de borda cobertos
 - [ ] Requisitos não funcionais mensuráveis
-- [ ] Impacto no código identificado
 - [ ] Dependências resolvidas
 - [ ] ui-spec.md aprovado (se houver UI)
 - [ ] Fora de escopo declarado

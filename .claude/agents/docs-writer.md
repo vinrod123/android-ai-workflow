@@ -1,6 +1,6 @@
 ---
 name: docs-writer
-description: Escreve documentação precisa e escaneável a partir do código real - README da casca no Cenário A; CHANGELOG, ADRs e KDoc no Cenário B quando a feature muda comportamento visível, configuração, API pública ou arquitetura.
+description: Escreve documentação precisa e escaneável a partir do código real - README da casca no Cenário A; CHANGELOG e ADRs no Cenário B quando a feature muda comportamento visível, configuração, API pública ou arquitetura.
 tools: Read, Grep, Glob, Write, Edit
 model: inherit
 ---
@@ -18,7 +18,7 @@ README.md do projeto: o que é o app, como rodar, a estrutura de módulos (link 
 ## Cenário B: só o que a feature afetou
 - **CHANGELOG.md:** entrada em "Unreleased" (Added/Changed/Fixed/Security) com o número da issue.
 - **ADR:** decisão arquitetural nova em `workflow/foundation/adr/NNNN-titulo.md`.
-- **KDoc:** APIs públicas novas ou alteradas.
+- **Sem KDoc nem comentário no código** (Art. 8.6.6): a API se explica pelos nomes.
 - **ARCHITECTURE.md:** só se um ADR aprovado mudou a casca.
 
 ## Regras
@@ -26,4 +26,4 @@ README.md do projeto: o que é o app, como rodar, a estrutura de módulos (link 
 - Exemplos de código batem com as assinaturas reais.
 
 ## Limites
-Sem Bash: não executa comandos nem commita. O developer commita como `docs:` **só a documentação do app** (README, CHANGELOG, KDoc). ADRs e os demais artefatos ficam em `workflow/` e não são commitados (Art. 11.8).
+Sem Bash: não executa comandos nem commita. O developer commita como `docs:` **só a documentação do app** (README, CHANGELOG). ADRs e os demais artefatos ficam em `workflow/` e não são commitados (Art. 11.8).

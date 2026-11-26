@@ -9,7 +9,7 @@ Workflow com 12 papéis, dois cenários e gates humanos, governado por uma const
 | | Comando | Quando |
 |---|---|---|
 | **A: Fundação** | `/bootstrap` | Uma vez por projeto. A PO alinha o backlog, o tech-lead define a casca, o developer constrói, o devops implanta. Num projeto existente roda em modo mapeamento (documenta a casca que já existe). |
-| **B: Feature** | `/feature <issue>` | Por story. O developer refina, o planner faz o check final e o plano, o test-engineer monta os testes RED, o developer implementa, depois vêm reviews, verifier e merge humano. |
+| **B: Feature** | `/feature <issue>` | Por story. A PO refina, o planner faz o check final e o plano, o test-engineer monta os testes RED, o developer implementa, depois vêm reviews, verifier e merge humano. |
 
 ## O repositório do app é só do app (Art. 11.8)
 

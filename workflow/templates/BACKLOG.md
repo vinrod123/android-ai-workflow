@@ -22,7 +22,7 @@
 |------|----|-------|-----------------------------|--------------|-------|
 | 1 | S-1 | E-1 | Como <persona>, quero <ação>, para <benefício> | AC-1: ...; AC-2: ... | #<n> |
 
-> As stories não precisam estar redondas aqui. O refinamento completo é feito pelo developer no Cenário B.
+> As stories não precisam estar redondas aqui. O refinamento completo é feito pela PO no Cenário B.
 
 ## Perguntas abertas
 - [ ] <pergunta ao humano>

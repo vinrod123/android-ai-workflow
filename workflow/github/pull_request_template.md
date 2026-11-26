@@ -4,9 +4,8 @@
 Closes #<issue>
 
 ## Artefatos
-- Ticket: `workflow/specs/<issue>-<slug>/ticket.md`
-- Plano: `workflow/specs/<issue>-<slug>/plan.md`
-- Validação: `workflow/specs/<issue>-<slug>/validation.md`
+- Ticket refinado e plano: na issue #<issue>
+- Validação do verifier: comentário neste PR
 
 ## Rastreabilidade
 | AC | Teste(s) |
@@ -17,7 +16,9 @@ Closes #<issue>
 - [ ] Todos os ACs com teste e passando
 - [ ] Build, lint, ktlint e detekt passando
 - [ ] Testes não alterados depois do P2
-- [ ] Código respeita o ARCHITECTURE.md (camadas, MVI, módulos)
+- [ ] Código respeita a arquitetura do projeto (camadas, MVI, módulos)
+- [ ] Zero comentários e nomes que revelam intenção no código novo ou alterado
+- [ ] Nenhum arquivo do workflow no diff
 - [ ] Review do tech-lead sem bloqueantes
 - [ ] Security sem Crítico/Alto aberto (se aplicável); designer ok (se houver UI)
 - [ ] Verifier: PASS

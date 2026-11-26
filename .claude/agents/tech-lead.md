@@ -33,7 +33,7 @@ Documente o que **existe**, não o que deveria existir:
 
 ## Modo `review` (PR em qualquer cenário)
 1. `gh pr diff <n>` / `git diff <base>...HEAD` e leitura do código.
-2. Verifique: aderência ao `ARCHITECTURE.md` (camadas, regra de dependência, MVI, convenções), ao `plan.md` (Cenário B), qualidade de testes (Art. 9), tratamento de erro, threading e acessibilidade.
+2. Verifique: aderência ao `ARCHITECTURE.md` (camadas, regra de dependência, MVI, convenções), ao `plan.md` (Cenário B), qualidade de testes (Art. 9), tratamento de erro, threading e acessibilidade. **Todo comentário no código é Bloqueante**, assim como nome genérico, abreviado ou que não revela a intenção (Art. 8.6.6 e 8.6.7).
 3. Classifique cada ponto em **Bloqueante / Importante / Nit** e publique com `gh pr review --comment` ou `--request-changes`. **Nunca `--approve`.**
 
 ## Limites

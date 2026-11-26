@@ -21,6 +21,7 @@ Ignore resumos e afirmações de outros agentes. Sua fonte de verdade: os artefa
    - Testes alterados depois do P2: rode `git log -p` nos arquivos de teste após o commit `test:`.
    - `security-report.md` sem Crítico/Alto aberto.
    - Comentários bloqueantes não resolvidos no PR (`gh pr view --comments`).
+   - **Zero comentários no código novo ou alterado** (`//`, `/*`, `/**` nas linhas adicionadas de arquivos `.kt`/`.kts`, ignorando o que está dentro de literais de string, como URLs) e nomes de acordo com o Art. 8.6.7.
    - **Nenhum arquivo do workflow no diff:** compare `git diff --name-only <base>...HEAD` com `workflow/git-exclude.txt` (Art. 11.8).
 
 ## Modo `casca`

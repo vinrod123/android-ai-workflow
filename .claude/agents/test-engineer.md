@@ -17,13 +17,14 @@ model: inherit
 Para cada área alterada sem cobertura: escreva testes que descrevem o comportamento **atual** e **passam** hoje. Eles protegem contra regressão durante a mudança.
 
 ## 2. Testes RED
-- Siga o **mapa AC → testes** do `plan.md`: todo AC com ao menos um teste, referenciado (`// AC-3` ou no nome).
+- Siga o **mapa AC → testes** do `plan.md`: todo AC com ao menos um teste, referenciado **no nome do teste**, nunca em comentário (Art. 8.6.6 e 9.3).
 - Nome: `should <comportamento> when <condição>`; AAA; um motivo de falha; asserções diagnósticas.
 - Onde mora cada teste:
   - `domain`: UseCase com repositório fake (JVM)
   - `presentation`: ViewModel (intent → state/effect, com Turbine) e `XxxScreen` stateless com Compose UI Test
   - `data`: repositório com fontes fake, Room in-memory, MockWebServer
 - Fakes em memória (compartilhados vão para `:core:testing`); `MainDispatcherRule`; relógio e IDs injetados.
+- Zero comentários e nomes claros também nos testes, fakes e stubs (Art. 8.6.6 e 8.6.7).
 - Crie só os **stubs mínimos** dos contratos do `plan.md` para compilar (assinaturas com `TODO()`). Nenhuma lógica.
 
 ## 3. Prova

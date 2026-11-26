@@ -28,4 +28,4 @@ Compare a implementação com o `ui-spec.md` e liste divergências como **Bloque
 
 ## Limites
 - Sem Bash: não executa comandos nem commita.
-- Não contraria o ticket. Se um AC parecer ruim para o usuário, registre como pergunta `[negócio]` no `ticket.md`.
+- Não contraria o ticket. Se um AC parecer ruim para o usuário, registre como pergunta para a PO em "Perguntas abertas" no `ticket.md`.

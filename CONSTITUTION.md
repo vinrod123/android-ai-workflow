@@ -1,6 +1,6 @@
 # CONSTITUIÇÃO DO WORKFLOW ANDROID
 
-> **Versão:** 2.1.0 · **Ratificada em:** 2026-11-26
+> **Versão:** 3.0.0 · **Ratificada em:** 2026-11-26
 > **Status:** Lei máxima do workflow. Todo agente, comando, hook e template deriva deste arquivo.
 > **Quem pode emendar:** somente um humano (Art. 15).
 
@@ -37,7 +37,7 @@ Este workflow existe para criar e evoluir apps Android de forma **previsível, v
 | II | **Ticket redondo antes do plano** | Nenhum plano é feito sobre ticket ambíguo. Dúvida vira pergunta, nunca suposição. |
 | III | **Teste antes do código** | Todo critério de aceite (AC) vira teste que **falha** (RED) antes da implementação. |
 | IV | **O humano decide** | Gates são do humano. Nenhum agente faz merge, aprova o próprio trabalho ou pula gate. |
-| V | **Separação de papéis** | Quem refina não valida o próprio refinamento (o planner valida). Quem implementa não define o contrato (o teste). Quem verifica não participou da implementação. |
+| V | **Separação de papéis** | Quem refina (PO) não valida o próprio refinamento (o planner valida). Quem implementa não define o contrato (o teste). Quem verifica não participou da implementação. |
 | VI | **Menor privilégio** | Cada agente tem só as ferramentas que o seu papel exige. |
 | VII | **Verificação independente** | O verifier roda com contexto limpo e julga só por artefatos e execução real. |
 | VIII | **Rastreabilidade total** | `Story → AC → Passo do plano → Teste → Commit → Validação`. Elo faltando = não pronto. |
@@ -68,17 +68,17 @@ Este workflow existe para criar e evoluir apps Android de forma **previsível, v
 | Papel | Postura | Cenário A | Cenário B | Commit | Nunca faz |
 |-------|---------|-----------|-----------|--------|-----------|
 | **engineering-manager** | 0.3 coordenadora | Conduz, publica issues | Conduz, sincroniza ticket na issue | ✗ (o workflow nunca é commitado, Art. 11.8) | Código, testes, aprovar gate |
-| **product-owner** | 0.2 precisa | Alinha o backlog com o humano | Escreve a story (se não estiver pronta) | ✗ | Decidir solução técnica |
+| **product-owner** | 0.2 precisa | Alinha o backlog com o humano | Escreve e **refina o ticket** até a DoR | ✗ | Decidir solução técnica |
 | **tech-lead** | 0.2 precisa | **Define (ou mapeia) a casca** | Review de todo PR | ✗ nunca | Implementar; aprovar PR |
-| **developer** | 0.2 precisa | **Constrói a casca** | **Refina o ticket**, depois implementa | ✓ código (com guard) | Alterar teste para passar; merge |
-| **planner** | 0.2 precisa | — | **Check final do ticket + plano de implementação** | ✗ | Refinar no lugar do developer; codar |
+| **developer** | 0.2 precisa | **Constrói a casca** | Implementa (só depois do P2) | ✓ código (com guard) | Alterar teste para passar; merge |
+| **planner** | 0.2 precisa | — | **Check final do ticket + plano de implementação** | ✗ | Refinar no lugar da PO; codar |
 | **test-engineer** | 0.1 determinística | — | **Pilha de testes RED** (+ caracterização) | ✗ nunca | Código de produção |
 | **devops** | 0.1 determinística | **Implanta a casca** (CI/CD, proteção de branch) | Mudanças de CI/build sob demanda | ✓ (com guard) | Aplicar sem plano aprovado |
 | **designer** | 0.4 criativa | — | `ui-spec.md` no refinamento (se UI) + review | ✗ (sem Bash) | Alterar código |
 | **security-reviewer** | 0.1 determinística | Review da casca (se pedido) | Review em área sensível | ✗ | Corrigir. Só reporta. |
 | **verifier** | 0.1 determinística | Valida a casca | Valida a feature | ✗ | Corrigir; aceitar afirmação sem execução |
 | **refactorer** | 0.1 determinística | — | Opcional, pós-GREEN | ✓ (com guard) | Mudar comportamento |
-| **docs-writer** | 0.2 precisa | README da casca | Opcional: CHANGELOG, ADR, KDoc | ✗ (sem Bash) | Documentar o que não existe |
+| **docs-writer** | 0.2 precisa | README da casca | Opcional: CHANGELOG, ADR (sem KDoc: Art. 8.6.6) | ✗ (sem Bash) | Documentar o que não existe |
 
 **Escala de postura:** 0.1 = execução literal · 0.2 = precisão com julgamento · 0.3 = coordenação flexível · 0.4 = exploração de alternativas.
 
@@ -131,7 +131,7 @@ VERIFIER ── valida a casca contra ARCHITECTURE.md e Art. 12.2 ── validat
 | **S** | Ajuste local, 1 módulo, sem UI nova, sem mudar contrato | Refinamento e plano curtos |
 | **M** | Feature contida, até ~3 módulos | Fluxo normal |
 | **L** | Feature nova com UI, dados e rede | Fluxo normal + designer obrigatório se houver UI |
-| **C** | Atravessa a arquitetura, migração, vários épicos | O developer **deve fatiar** em tickets S/M/L no refinamento |
+| **C** | Atravessa a arquitetura, migração, vários épicos | A PO **deve fatiar** em tickets S/M/L no refinamento |
 
 Área sensível (Art. 10.1) chama o security-reviewer em **qualquer** tamanho.
 
@@ -144,13 +144,13 @@ Story do backlog (issue)  ── ou demanda nova → PRODUCT-OWNER escreve a sto
 ENGINEERING-MANAGER (/feature) ── dimensiona ── branch ── STATUS.md
   │
   ▼
-DEVELOPER (modo refinamento) ── ticket.md redondo: ACs Gherkin completos, estados de borda,
-  │                             áreas impactadas, dependências, fatiamento (se C)
+PRODUCT-OWNER (refinamento) ── ticket.md redondo: ACs Gherkin completos, estados de borda,
+  │                              requisitos mensuráveis, dependências, fatiamento (se C)
   │   DESIGNER ── ui-spec.md (se UI, em paralelo)
   ▼
 PLANNER ── check final contra a Definition of Ready (6.3)
-  ├── lacuna de NEGÓCIO  → pergunta ao humano (via manager) → developer atualiza o ticket
-  ├── lacuna TÉCNICA     → devolve ao developer
+  ├── lacuna no ticket   → devolve à PO (que pergunta ao humano o que só ele sabe) → PO atualiza
+  ├── impacto no código  → o próprio planner levanta lendo o código
   └── tudo pronto        → plan.md (passos, contratos, mapa AC → teste)
   ■ P1 — Plano aprovado (humano) · manager sincroniza ticket + plano na issue
   │
@@ -182,7 +182,6 @@ Um ticket só está pronto para virar plano quando:
 - [ ] Todo AC em Gherkin, com ID (`AC-n`), testável e observável
 - [ ] Estados de borda cobertos: vazio, erro, carregando, offline, sem permissão, entrada inválida, rotação/morte de processo (os aplicáveis)
 - [ ] Requisitos não funcionais mensuráveis (nada de "rápido": dizer quanto)
-- [ ] Áreas e módulos impactados identificados no código real
 - [ ] Dependências (APIs, outras stories, assets, textos) resolvidas ou explicitadas
 - [ ] UI com `ui-spec.md` aprovado pelo designer (se houver UI)
 - [ ] Fora de escopo declarado
@@ -281,9 +280,22 @@ presentation ──► domain ◄── data
 3. Strings em `strings.xml`. Nada hardcoded na UI.
 4. Acessibilidade obrigatória: `contentDescription` com significado, alvo ≥ 48dp, contraste AA, fonte escalada, TalkBack.
 5. Lint, ktlint e detekt passam sem nova supressão injustificada.
+6. **Zero comentários no código.** Nenhum agente escreve comentário (`//`, `/* */`, KDoc) em código de produção ou de teste. O código se explica sozinho pelos nomes e pela estrutura. Se um trecho parece precisar de comentário, extraia uma função ou variável com nome que diga o porquê.
+   - **Alcance:** arquivos Kotlin (`.kt`) e scripts Gradle (`.kts`). Recursos XML e outros arquivos ficam fora desta regra.
+7. **Nomes que revelam intenção (Clean Code):**
+   - Classes e tipos: substantivos que dizem o que são (`OrderRepository`, `CheckoutUiState`), nunca genéricos como `Manager`, `Helper`, `Utils`, `Data`, `Info`.
+   - Funções: verbos que dizem o que fazem (`calculateShippingFee`, `loadOrders`); booleanos e predicados como pergunta (`isExpired`, `hasPermission`, `canRetry`).
+   - Variáveis e parâmetros: nomes completos e pronunciáveis. Proibido abreviação (`usr`, `tmp`, `res`), letra solta (exceto `i` em laço curto e `it` em lambda de uma linha) e notação húngara.
+   - Constantes nomeadas no lugar de números e strings mágicas (`MAX_LOGIN_ATTEMPTS = 3`).
+   - Um conceito, uma palavra: não misture `fetch`, `get` e `load` para a mesma ação no projeto.
+   - Funções pequenas, com uma responsabilidade e poucos parâmetros (até 3; acima disso, um tipo dedicado). **Exceção:** funções `@Composable` seguem a convenção do Compose: `modifier: Modifier = Modifier` como primeiro parâmetro opcional e os demais parâmetros opcionais com valor padrão.
+   - Convenções Kotlin oficiais: `PascalCase` para tipos, `camelCase` para funções e variáveis, `SCREAMING_SNAKE_CASE` para constantes.
+8. Não contam como comentário: anotações exigidas por ferramenta (`@Suppress`, com justificativa aprovada no review) e `//` ou `/*` dentro de literais de string (ex.: `"https://..."`).
 
 ### 8.7 Projeto existente
 As convenções reais do projeto, mapeadas no `ARCHITECTURE.md`, **prevalecem** sobre 8.1–8.6: consistência vence preferência. Divergências em relação a este artigo são registradas como **informação**, não como defeito. Migrar para o padrão é sempre um ticket próprio, com ADR. Os Art. 2, 9, 10 e 11 valem sempre.
+
+**Exceção:** as regras 8.6.6 a 8.6.8 (zero comentários e nomes que revelam intenção) valem também em projeto existente, para todo código **escrito ou alterado** pelos agentes. Comentários e nomes antigos fora do escopo do ticket não são mexidos.
 
 ---
 
@@ -313,7 +325,9 @@ As convenções reais do projeto, mapeadas no `ARCHITECTURE.md`, **prevalecem** 
 - `data`: repositório com fontes fake; DAO com Room in-memory; API com MockWebServer.
 
 ### 9.3 Rastreabilidade e caracterização
-- Todo teste referencia o AC que cobre (`// AC-3` ou no nome). AC sem teste bloqueia o P2.
+- Todo teste referencia o AC que cobre **no nome**, nunca em comentário (Art. 8.6.6). AC sem teste bloqueia o P2.
+  - Em `test/` (JVM): pode usar backticks do Kotlin, como `` `should show empty state when list is empty (AC-3)` ``.
+  - Em `androidTest/` (instrumentado): **sem espaços nem parênteses** no nome, porque o Android só aceita esses caracteres em nome de método a partir da API 30. Use `ac3_shouldShowEmptyState_whenListIsEmpty`.
 - **Caracterização:** se o código a ser alterado não tem testes, o test-engineer primeiro escreve testes que **travam o comportamento atual** (passando), e só depois os testes RED da mudança.
 
 ---
@@ -356,6 +370,7 @@ As convenções reais do projeto, mapeadas no `ARCHITECTURE.md`, **prevalecem** 
 - [ ] Build, lint, ktlint e detekt passam
 - [ ] Nenhum teste alterado depois do P2 sem reabrir o P2
 - [ ] Código respeita o `ARCHITECTURE.md` (camadas, MVI, módulos)
+- [ ] Zero comentários e nomes que revelam intenção no código novo ou alterado (Art. 8.6.6 a 8.6.8)
 - [ ] Review do tech-lead sem bloqueantes
 - [ ] Security sem Crítico/Alto aberto (se aplicável); designer ok (se UI)
 - [ ] Nenhum arquivo do workflow no diff do PR (Art. 11.8)
@@ -376,7 +391,7 @@ As convenções reais do projeto, mapeadas no `ARCHITECTURE.md`, **prevalecem** 
 
 ## Art. 13 — Loops e escalonamento
 
-1. **Planner ↔ developer/humano:** no máximo **3 rodadas** de perguntas. Na 3ª sem fechar a DoR, o manager escala ao humano (reescrever a story, fatiar ou descartar).
+1. **Planner ↔ PO/humano:** no máximo **3 rodadas** de perguntas. Na 3ª sem fechar a DoR, o manager escala ao humano (reescrever a story, fatiar ou descartar).
 2. **Verifier:** FAIL vira passo de correção no `plan.md` → developer → reviews afetados → verifier de novo **com contexto limpo**. **No máximo 3 iterações.** Depois disso, o manager escala com as lacunas e as opções (reabrir P1, aceitar com ressalva, abandonar).
 3. Qualquer agente bloqueado (ambiguidade, conflito de regra, ambiente quebrado) para e escala. Contornar é proibido.
 
@@ -425,3 +440,5 @@ As convenções reais do projeto, mapeadas no `ARCHITECTURE.md`, **prevalecem** 
 | 1.0.0 | 2026-11-26 | Ratificação inicial: 11 papéis, 4 gates, S/M/L/C |
 | 2.0.0 | 2026-11-26 | Dois cenários (Fundação e Feature); papel planner; developer refina o ticket; gates F1–F4 e P0–P3; arquitetura fixa (SOLID, Clean, MVVM+MVI) e stack de bibliotecas; Definition of Ready; convenções de projeto existente prevalecem; testes de caracterização |
 | 2.1.0 | 2026-11-26 | Art. 11.8: o repositório é só do app; arquivos do workflow ficam locais (`.git/info/exclude`), concentrados em `workflow/`, bloqueados pelo guard; issue e PR viram o registro compartilhado; ajustes no F4 e na DoD |
+| 2.2.0 | 2026-11-26 | Art. 8.6.6–8.6.8: zero comentários no código (inclusive KDoc e testes) e nomes que revelam intenção segundo o Clean Code; AC referenciado no nome do teste |
+| 3.0.0 | 2026-11-26 | Refinamento passa do developer para a PO, antes de qualquer etapa do developer (mudança de papel = MAJOR, Art. 15.3); impacto no código passa para o planner; perguntas do planner voltam à PO. Ajustes da revisão: zero comentários vale no código novo ou alterado também em projeto existente; exceção de parâmetros para `@Composable`; nomes de teste em `androidTest/`; alcance da regra (`.kt`/`.kts`) e strings; item na DoD |

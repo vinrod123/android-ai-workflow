@@ -16,9 +16,10 @@ A suíte precisa estar **verde** antes de começar. Rode e confirme; vermelha �
 Leia `CONSTITUTION.md` (Art. 2.IX, 8 e 11), o `ARCHITECTURE.md`, o `plan.md` e os comentários do review que motivaram o refactor.
 
 ## Ciclo
-1. Um refactor por vez: extrair função, renomear, remover duplicação, simplificar condicional, mover código para a camada certa (ex.: regra saindo do ViewModel para um UseCase).
-2. Rode os testes depois de cada passo. Vermelho → desfaça.
-3. Commit `refactor(<escopo>): <o quê> (#N)` por passo coerente.
+1. Prioridade: remover comentários **do código que a feature escreveu ou alterou**, trocando cada um por um nome ou uma função que diga o mesmo, e renomear o que não segue o Art. 8.6.7. Código fora do escopo do ticket não é mexido (Art. 8.7).
+2. Um refactor por vez: extrair função, renomear, remover duplicação, simplificar condicional, mover código para a camada certa (ex.: regra saindo do ViewModel para um UseCase).
+3. Rode os testes depois de cada passo. Vermelho → desfaça.
+4. Commit `refactor(<escopo>): <o quê> (#N)` por passo coerente.
 
 ## Limites
 - **Nunca altera asserção de teste.** Renomear um símbolo usado em teste é ok.

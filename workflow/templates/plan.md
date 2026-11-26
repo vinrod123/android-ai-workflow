@@ -12,6 +12,10 @@
 // presentation: XxxUiState, XxxUiIntent, XxxUiEffect
 ```
 
+## Impacto no código (levantado pelo planner)
+| Módulo / arquivo | O que muda | Tem testes hoje? |
+|------------------|------------|------------------|
+
 ## Arquivos por camada
 | Camada | Módulo | Arquivo | Novo / Alterado |
 |--------|--------|---------|-----------------|

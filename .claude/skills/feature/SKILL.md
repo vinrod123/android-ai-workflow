@@ -1,6 +1,6 @@
 ---
 name: feature
-description: Cenário B da Constituição (Feature). Conduz, como engineering-manager, uma story do backlog até o PR - refinamento pelo developer, check final e plano pelo planner, testes RED pelo test-engineer, implementação, reviews e verifier - parando nos gates P0–P3. Use para "/feature <issue ou descrição>" ou "/feature resume <issue>". Exige o Cenário A concluído.
+description: Cenário B da Constituição (Feature). Conduz, como engineering-manager, uma story do backlog até o PR - refinamento pela PO, check final e plano pelo planner, testes RED pelo test-engineer, implementação, reviews e verifier - parando nos gates P0–P3. Use para "/feature <issue ou descrição>" ou "/feature resume <issue>". Exige o Cenário A concluído.
 ---
 
 # /feature: Cenário B (Feature)
@@ -19,17 +19,15 @@ Você, a sessão principal, **é o engineering-manager**. Os outros papéis são
 - Dimensione S/M/L/C (Art. 6.1), verifique os gatilhos sensíveis (Art. 10.1) e se há UI. Mostre ao humano.
 - Crie a branch `<tipo>/<issue>-<slug>` a partir da base do `CLAUDE.md`, a pasta `workflow/specs/<issue>-<slug>/` e o `STATUS.md` (template `workflow/templates/STATUS-feature.md`).
 
-## 2. Refinamento (developer + designer)
-- Chame o **developer** em **modo refinamento**, passando a issue, o caminho da pasta e o tamanho. Ele lê o código real e entrega o `ticket.md` redondo.
+## 2. Refinamento (product-owner + designer)
+- Chame o **product-owner** em **modo refinamento**, passando a issue, o caminho da pasta e o tamanho. Ele entrega o `ticket.md` redondo. O developer **não participa** desta etapa.
+- Perguntas que só o humano responde: leve literalmente ao humano e devolva as respostas à PO.
 - Se houver UI, chame o **designer** em paralelo para o `ui-spec.md`.
-- Tamanho C: o developer devolve o fatiamento. Crie as issues filhas e reinicie o `/feature` na primeira delas.
+- Tamanho C: a PO devolve o fatiamento. Crie as issues filhas e reinicie o `/feature` na primeira delas.
 
 ## 3. Check final (planner): loop até a DoR
 Chame o **planner** com o caminho da pasta. Ele devolve uma de duas coisas:
-- **PERGUNTAS**:
-  - `[negócio]` → pergunte ao humano literalmente e devolva as respostas ao **developer** para atualizar o ticket.
-  - `[técnico]` → devolva ao **developer**.
-  - Depois chame o planner de novo. **Máximo de 3 rodadas** (Art. 13.1); na 3ª, escale ao humano.
+- **PERGUNTAS** → devolva ao **product-owner**, que responde ou leva ao humano (via você) e atualiza o ticket. Depois chame o planner de novo. **Máximo de 3 rodadas** (Art. 13.1); na 3ª, escale ao humano.
 - **PRONTO** + `plan.md` → siga.
 
 **■ P1:** resuma ACs, abordagem, contratos e mapa AC → teste e pergunte *"Aprova o plano (P1)?"*. Registre.
@@ -49,7 +47,7 @@ Em paralelo, quando aplicável:
 - **designer** (UI)
 
 Comentários bloqueantes voltam ao **developer**. Repita o review afetado até não haver bloqueantes.
-Opcionais: **refactorer** (dívida apontada no review), **docs-writer** (CHANGELOG/ADR/KDoc), **devops** (CI/build).
+Opcionais: **refactorer** (dívida apontada no review), **docs-writer** (CHANGELOG/ADR), **devops** (CI/build).
 
 ## 7. Verificação (verifier)
 Chame o **verifier** em modo feature, **sem** repassar resumos de outros agentes: só a pasta da feature e o número do PR.

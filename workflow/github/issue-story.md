@@ -1,7 +1,7 @@
 ## Story
 **Como** <persona>, **quero** <ação>, **para** <benefício>.
 
-## ACs iniciais (a PO escreve; o developer refina no /feature)
+## ACs iniciais (a PO escreve e refina no /feature)
 - AC-1: ...
 
 ## Épico / prioridade
