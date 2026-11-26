@@ -4,9 +4,9 @@
 Closes #<issue>
 
 ## Artefatos
-- Ticket: `docs/specs/<issue>-<slug>/ticket.md`
-- Plano: `docs/specs/<issue>-<slug>/plan.md`
-- Validação: `docs/specs/<issue>-<slug>/validation.md`
+- Ticket: `workflow/specs/<issue>-<slug>/ticket.md`
+- Plano: `workflow/specs/<issue>-<slug>/plan.md`
+- Validação: `workflow/specs/<issue>-<slug>/validation.md`
 
 ## Rastreabilidade
 | AC | Teste(s) |

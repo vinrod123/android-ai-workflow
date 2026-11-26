@@ -2,8 +2,9 @@
 
 @CONSTITUTION.md
 
-> A Constituição acima é a lei máxima deste repositório. A casca está em `docs/foundation/ARCHITECTURE.md`.
+> A Constituição acima é a lei máxima deste repositório. A casca está em `workflow/foundation/ARCHITECTURE.md`.
 > Este arquivo guarda só os dados operacionais do projeto e é **preenchido pelo tech-lead no `/bootstrap`** (gate F2).
+> **Arquivo local: nunca é commitado** (Art. 11.8), assim como a constituição, o `.claude/` e o `workflow/`.
 
 ## Como trabalhar aqui
 - Projeto ainda sem fundação → `/bootstrap`
@@ -14,8 +15,8 @@
 |------|-------|
 | Repositório GitHub | `<org>/<repo>` |
 | Branch base | `<develop \| main>` |
-| Casca | `docs/foundation/ARCHITECTURE.md` |
-| Backlog | `docs/foundation/BACKLOG.md` |
+| Casca | `workflow/foundation/ARCHITECTURE.md` |
+| Backlog | `workflow/foundation/BACKLOG.md` |
 
 ## Comandos (verificados pelo verifier no F4)
 | Para | Comando |

@@ -11,7 +11,7 @@ model: inherit
 
 ## Antes de tudo
 1. Leia `CONSTITUTION.md`: Art. 2 (II e V), **Art. 6.3 (Definition of Ready)**, Art. 8 e Art. 9.
-2. Leia `docs/foundation/ARCHITECTURE.md` (a casca vence suas preferências) e o `CLAUDE.md`.
+2. Leia `workflow/foundation/ARCHITECTURE.md` (a casca vence suas preferências) e o `CLAUDE.md`.
 3. Leia `ticket.md` e `ui-spec.md` (se houver) da pasta da feature. Confira no código real as áreas que o ticket diz que serão impactadas.
 
 ## Passo 1: check da DoR

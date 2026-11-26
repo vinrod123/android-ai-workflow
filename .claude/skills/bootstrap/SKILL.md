@@ -13,38 +13,42 @@ Você, a sessão principal, **é o engineering-manager**. Os outros papéis são
    - Existe `settings.gradle.kts` (ou `.gradle`): o humano já criou o projeto no Android Studio.
    - É um repositório Git com remote no GitHub (`git remote -v`) e o `gh auth status` está ok.
    - Se faltar algo: **pare** e diga ao humano exatamente o que fazer. Você não cria o projeto nem o repositório.
-3. Se existir `docs/foundation/STATUS.md`: retome da etapa registrada.
+3. **Isole o workflow do repositório (Art. 11.8):**
+   - Acrescente as linhas de `workflow/git-exclude.txt` ao `.git/info/exclude`, sem duplicar.
+   - Rode `git status --porcelain` e confirme que nenhum arquivo do workflow aparece.
+   - Se algum deles já estiver **rastreado** pelo Git (por exemplo, o time já versiona um `CLAUDE.md`), pare e avise o humano. Não remova nada do índice por conta própria.
+4. Se existir `workflow/foundation/STATUS.md`: retome da etapa registrada.
 
 ## 1. Detectar o modo
 - **Novo:** o projeto só tem o template do Android Studio (`:app` e quase nenhum código próprio).
 - **Mapeamento:** já existe código de produto (vários módulos/telas, histórico de commits relevante).
 Mostre ao humano o modo detectado e o porquê, e confirme antes de seguir.
 
-Crie a branch `chore/<issue>-casca` (a issue é criada no passo 3; até lá use `chore/fundacao`), crie `docs/foundation/STATUS.md` a partir de `workflow/templates/STATUS-foundation.md` e registre o modo.
+Crie a branch `chore/<issue>-casca` (a issue é criada no passo 3; até lá use `chore/fundacao`), crie `workflow/foundation/STATUS.md` a partir de `workflow/templates/STATUS-foundation.md` e registre o modo.
 
 ## 2. Alinhamento de backlog (product-owner) → F1
 1. Pergunte ao humano a visão do produto: público, problema, objetivos e o que está fora.
-2. Chame o **product-owner** com essas respostas literais para produzir `docs/foundation/BACKLOG.md` (template `workflow/templates/BACKLOG.md`).
+2. Chame o **product-owner** com essas respostas literais para produzir `workflow/foundation/BACKLOG.md` (template `workflow/templates/BACKLOG.md`).
 3. Repasse as perguntas abertas da PO ao humano, e as respostas de volta à PO, até não sobrar pergunta (máx. 3 rodadas, Art. 13.1).
 4. **■ F1:** apresente épicos, stories e prioridade e pergunte *"Aprova o backlog (F1)?"*. Registre no STATUS.
-5. Publique: uma issue por story (`gh issue create`, labels `story`, `epic:<nome>`, `prio:<n>`) e uma issue `chore: casca do projeto`. Anote os números no `BACKLOG.md`. Renomeie a branch para `chore/<issue-da-casca>-casca`.
+5. Publique: uma issue por story (`gh issue create --body-file`, corpo no modelo `workflow/github/issue-story.md`, labels `story`, `epic:<nome>`, `prio:<n>`) e uma issue `chore: casca do projeto`. Anote os números no `BACKLOG.md`. Renomeie a branch para `chore/<issue-da-casca>-casca`.
 
 ## 3. Casca (tech-lead) → F2
 Chame o **tech-lead** em modo `definir` (novo) ou `mapear` (existente), passando o `BACKLOG.md`. Ele entrega:
-- `docs/foundation/ARCHITECTURE.md` (template `workflow/templates/ARCHITECTURE.md`)
-- `docs/foundation/adr/` com as decisões
+- `workflow/foundation/ARCHITECTURE.md` (template `workflow/templates/ARCHITECTURE.md`)
+- `workflow/foundation/adr/` com as decisões
 - `CLAUDE.md` preenchido (comandos reais)
 
-**■ F2:** resuma módulos, camadas, padrão MVI, bibliotecas e desvios (no modo mapeamento: divergências do Art. 8, como informação) e pergunte *"Aprova a casca (F2)?"*. Registre. Commit `docs(fundacao): backlog e casca (#N)`.
+**■ F2:** resuma módulos, camadas, padrão MVI, bibliotecas e desvios (no modo mapeamento: divergências do Art. 8, como informação) e pergunte *"Aprova a casca (F2)?"*. Registre. **Nada disso é commitado** (Art. 11.8): publique na issue da casca um comentário com o resumo do `ARCHITECTURE.md` (módulos, camadas, bibliotecas e ADRs).
 
 ## 4. Construção (developer): só no modo Novo
 Chame o **developer** em modo `casca` com o `ARCHITECTURE.md`. Ele constrói, roda build/testes/lint, commita e abre o PR da casca.
 Depois chame o **tech-lead** para revisar o PR. Comentários bloqueantes voltam ao developer.
 
-No modo mapeamento, abra o PR só com a documentação.
+No modo mapeamento não há PR de casca: o resultado é só documentação, que não é commitada.
 
 ## 5. Implantação (devops) → F3
-Chame o **devops** em modo `plano`: ele escreve `docs/foundation/DEPLOY-PLAN.md` (CI no GitHub Actions, proteção de branch, secrets que o **humano** precisa cadastrar, como reverter).
+Chame o **devops** em modo `plano`: ele escreve `workflow/foundation/DEPLOY-PLAN.md` (CI no GitHub Actions, proteção de branch, secrets que o **humano** precisa cadastrar, como reverter).
 **■ F3:** apresente o plano e pergunte *"Aprova a implantação (F3)?"*. Liste os secrets que o humano precisa criar manualmente.
 Depois da aprovação, chame o **devops** em modo `aplicar`. Confirme o CI verde no PR (`gh pr checks`).
 
@@ -52,7 +56,8 @@ Depois da aprovação, chame o **devops** em modo `aplicar`. Confirme o CI verde
 Chame o **verifier** em modo `casca`, **sem** repassar resumos de outros agentes: só o caminho do `ARCHITECTURE.md`, do `CLAUDE.md` e do PR. FAIL → correções pelo developer/devops → verifier de novo (máx. 3, Art. 13.2).
 
 ## 7. ■ F4 e encerramento
-Com PASS: atualize o STATUS, comente na issue da casca e entregue ao humano o link do PR com o checklist do Art. 12.2. Diga claramente que **o merge é dele**. Depois do merge, o projeto está liberado para o `/feature` na ordem de prioridade do `BACKLOG.md`.
+Com PASS: atualize o STATUS, publique o `validation.md` como comentário no PR (`gh pr comment --body-file`) e entregue ao humano o link do PR com o checklist do Art. 12.2. Diga claramente que **o merge é dele**.
+Sem PR (modo mapeamento sem mudança de CI): publique a validação na issue da casca e peça a **confirmação explícita do F4**. Só depois dela feche a issue. Depois do merge, o projeto está liberado para o `/feature` na ordem de prioridade do `BACKLOG.md`.
 
 ## Proibições
-`gh pr merge`, `gh pr review --approve`, `push --force`, commit em branch protegida, escrever código, aplicar mudança de repositório sem F3, dispensar F4.
+`gh pr merge`, `gh pr review --approve`, `push --force`, commit em branch protegida, **commitar qualquer arquivo do workflow** (Art. 11.8), escrever código, aplicar mudança de repositório sem F3, dispensar F4.

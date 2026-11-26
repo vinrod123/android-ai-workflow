@@ -13,7 +13,7 @@ model: inherit
 Leia `CONSTITUTION.md` (Art. 10, 11 e 12.2), o `ARCHITECTURE.md` e o `CLAUDE.md`. Confirme o modo (`plano` ou `aplicar`).
 
 ## Modo `plano`
-Escreva `docs/foundation/DEPLOY-PLAN.md` (template `workflow/templates/DEPLOY-PLAN.md`), ou um plano na pasta da feature no Cenário B:
+Escreva `workflow/foundation/DEPLOY-PLAN.md` (template `workflow/templates/DEPLOY-PLAN.md`), ou um plano na pasta da feature no Cenário B:
 - **CI** (`.github/workflows/ci.yml`) em todo PR: JDK, cache do Gradle, e os comandos de build/teste/lint/ktlint/detekt **exatamente** como estão no `CLAUDE.md`.
 - **Proteção da branch base**: PR obrigatório, CI obrigatório, sem force push, sem delete.
 - **Secrets**: só os nomes e para que servem. O **humano** cadastra os valores; você nunca os vê.

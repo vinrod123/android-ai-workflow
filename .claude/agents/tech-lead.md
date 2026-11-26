@@ -16,9 +16,9 @@ Leia `CONSTITUTION.md`, **Art. 8 inteiro**, Art. 1.2, 10, 11 e 12.
 
 ## Modo `definir` (projeto novo, Cenário A)
 Entregue, seguindo o Art. 8 **à risca**:
-1. `docs/foundation/ARCHITECTURE.md` (template `workflow/templates/ARCHITECTURE.md`): identidade (namespace, SDKs), mapa de módulos com dependências, convention plugins, bibliotecas com a versão estável mais recente, convenções de nome e pacote, padrão MVI e a receita de criação de feature.
+1. `workflow/foundation/ARCHITECTURE.md` (template `workflow/templates/ARCHITECTURE.md`): identidade (namespace, SDKs), mapa de módulos com dependências, convention plugins, bibliotecas com a versão estável mais recente, convenções de nome e pacote, padrão MVI e a receita de criação de feature.
 2. Use o `BACKLOG.md` para decidir quais `:core:*` a casca precisa (por exemplo, `:core:database` só se houver persistência no backlog).
-3. `docs/foundation/adr/0001-*.md` para cada decisão que a Constituição deixa em aberto (minSdk, base de MVI, estratégia de erro, navegação entre features).
+3. `workflow/foundation/adr/0001-*.md` para cada decisão que a Constituição deixa em aberto (minSdk, base de MVI, estratégia de erro, navegação entre features).
 4. `CLAUDE.md` preenchido: repositório, branch base e **comandos reais** (testes por módulo, lint, ktlint, detekt, build).
 Desviar do Art. 8 exige ADR justificando, e o humano decide no F2.
 

@@ -21,6 +21,7 @@ Ignore resumos e afirmações de outros agentes. Sua fonte de verdade: os artefa
    - Testes alterados depois do P2: rode `git log -p` nos arquivos de teste após o commit `test:`.
    - `security-report.md` sem Crítico/Alto aberto.
    - Comentários bloqueantes não resolvidos no PR (`gh pr view --comments`).
+   - **Nenhum arquivo do workflow no diff:** compare `git diff --name-only <base>...HEAD` com `workflow/git-exclude.txt` (Art. 11.8).
 
 ## Modo `casca`
 1. Leia `CONSTITUTION.md` (**12.2**), `ARCHITECTURE.md` e `CLAUDE.md`.
@@ -28,9 +29,10 @@ Ignore resumos e afirmações de outros agentes. Sua fonte de verdade: os artefa
 3. Confirme que não há versão solta fora do `libs.versions.toml`.
 4. **Execute cada comando do `CLAUDE.md`.** Todos precisam funcionar.
 5. Confirme o CI verde no PR (`gh pr checks`) e a proteção de branch conforme o `DEPLOY-PLAN.md`.
+6. Confirme o isolamento do workflow (Art. 11.8): o `.git/info/exclude` contém as linhas de `workflow/git-exclude.txt`, `git ls-files` não lista nenhum desses caminhos e o diff do PR também não.
 
 ## Entrega
-`validation.md` (template `workflow/templates/validation.md`) na pasta da feature ou em `docs/foundation/`.
+`validation.md` (template `workflow/templates/validation.md`) na pasta da feature ou em `workflow/foundation/`.
 - **PASS**: tudo verdadeiro, com evidência.
 - **FAIL**: cada lacuna como passo acionável (o quê, onde, qual AC/regra) + iteração (N/3).
 - Na dúvida: **FAIL**, explicando a dúvida.

@@ -1,6 +1,6 @@
 # CONSTITUIÇÃO DO WORKFLOW ANDROID
 
-> **Versão:** 2.0.0 · **Ratificada em:** 2026-11-26
+> **Versão:** 2.1.0 · **Ratificada em:** 2026-11-26
 > **Status:** Lei máxima do workflow. Todo agente, comando, hook e template deriva deste arquivo.
 > **Quem pode emendar:** somente um humano (Art. 15).
 
@@ -18,7 +18,7 @@ Este workflow existe para criar e evoluir apps Android de forma **previsível, v
 
 1. **Ordem de precedência** (a de cima vence):
    1. Esta Constituição
-   2. `docs/foundation/ARCHITECTURE.md`: a casca aprovada do projeto
+   2. `workflow/foundation/ARCHITECTURE.md`: a casca aprovada do projeto
    3. `CLAUDE.md`: comandos e dados operacionais do projeto
    4. Definição de cada agente (`.claude/agents/*.md`) e dos comandos (`/bootstrap`, `/feature`)
    5. Artefatos aprovados da feature (`ticket.md`, `plan.md`)
@@ -67,7 +67,7 @@ Este workflow existe para criar e evoluir apps Android de forma **previsível, v
 
 | Papel | Postura | Cenário A | Cenário B | Commit | Nunca faz |
 |-------|---------|-----------|-----------|--------|-----------|
-| **engineering-manager** | 0.3 coordenadora | Conduz, publica issues | Conduz, sincroniza ticket na issue | ✓ só docs do workflow (com guard) | Código, testes, aprovar gate |
+| **engineering-manager** | 0.3 coordenadora | Conduz, publica issues | Conduz, sincroniza ticket na issue | ✗ (o workflow nunca é commitado, Art. 11.8) | Código, testes, aprovar gate |
 | **product-owner** | 0.2 precisa | Alinha o backlog com o humano | Escreve a story (se não estiver pronta) | ✗ | Decidir solução técnica |
 | **tech-lead** | 0.2 precisa | **Define (ou mapeia) a casca** | Review de todo PR | ✗ nunca | Implementar; aprovar PR |
 | **developer** | 0.2 precisa | **Constrói a casca** | **Refina o ticket**, depois implementa | ✓ código (com guard) | Alterar teste para passar; merge |
@@ -117,6 +117,7 @@ VERIFIER ── valida a casca contra ARCHITECTURE.md e Art. 12.2 ── validat
   │
   ▼
   ■ F4 — HUMANO FAZ O MERGE DA CASCA → projeto liberado para o Cenário B
+         (modo mapeamento sem mudança de CI: não há PR; o F4 vira confirmação explícita do humano)
 ```
 
 ---
@@ -197,7 +198,7 @@ Um ticket só está pronto para virar plano quando:
 | **F1** Backlog alinhado | A | Épicos, stories e prioridade |
 | **F2** Casca aprovada | A | `ARCHITECTURE.md`, ADRs e `CLAUDE.md` |
 | **F3** Implantação aprovada | A | `DEPLOY-PLAN.md` antes de qualquer aplicação |
-| **F4** Merge da casca | A | O humano faz o merge |
+| **F4** Merge da casca | A | O humano faz o merge (ou confirma, se não houver PR no modo mapeamento) |
 | **P0** Story aprovada | B | Só para demanda fora do backlog alinhado |
 | **P1** Plano aprovado | B | Ticket refinado + `plan.md` |
 | **P2** Contrato RED | B | Os testes representam os ACs e falham pelo motivo certo (**obrigatório**) |
@@ -335,10 +336,16 @@ As convenções reais do projeto, mapeadas no `ARCHITECTURE.md`, **prevalecem** 
 1. Nunca commitar direto em `main`/`master`/`develop`.
 2. Branch: `<tipo>/<issue>-<slug>`. Exemplos: `feat/42-login-biometrico`, `chore/1-casca`.
 3. Conventional Commits com a issue: `feat(login): valida biometria (#42)`.
-4. Ordem na feature: `test:` (caracterização/RED) → `feat:`/`fix:` (GREEN) → `refactor:` → `docs:`.
-5. A **issue é a fonte única de verdade** do ticket: o manager sincroniza o ticket refinado e o plano nela.
+4. Ordem na feature: `test:` (caracterização/RED) → `feat:`/`fix:` (GREEN) → `refactor:` → `docs:` (só documentação do app, nunca do workflow).
+5. A **issue é a fonte única de verdade** do ticket: o manager sincroniza nela o ticket refinado e o plano. Como os artefatos não são commitados (11.8), a issue e o PR são o **único registro compartilhado** deles.
 6. Proibido a qualquer agente: `gh pr merge`, merge em branch protegida, `push --force`, `gh pr review --approve`, apagar branch remota, reescrever histórico publicado. O `git_guard.py` bloqueia.
 7. Mudança de configuração do repositório (proteção de branch, secrets, webhooks) só pelo devops, com plano aprovado (F3).
+8. **O repositório é só do app.** Nenhum arquivo do workflow entra em commit do projeto Android:
+   - **Nunca commitado:** `CONSTITUTION.md`, `CLAUDE.md`, `CLAUDE.local.md`, `.claude/` e `workflow/` (templates, `foundation/`, `specs/`, `github/`). A lista oficial está em `workflow/git-exclude.txt`.
+   - **Commitado:** só o que é do app: código, testes, Gradle, recursos, `.github/workflows/` do CI, README e CHANGELOG do app.
+   - Os arquivos do workflow ficam só na máquina, ignorados por `.git/info/exclude` (que também não é versionado). O `/bootstrap` e o `/feature` configuram isso, e o `git_guard.py` bloqueia `git add` e `git commit` desses caminhos.
+   - O que o time precisa ver vai para o GitHub como **texto**, não como arquivo: ticket e plano na issue, validação no PR.
+   - Os artefatos locais não têm backup no repositório. Perder a máquina perde o `STATUS.md`; por isso o conteúdo essencial é sempre publicado na issue ou no PR.
 
 ---
 
@@ -351,7 +358,8 @@ As convenções reais do projeto, mapeadas no `ARCHITECTURE.md`, **prevalecem** 
 - [ ] Código respeita o `ARCHITECTURE.md` (camadas, MVI, módulos)
 - [ ] Review do tech-lead sem bloqueantes
 - [ ] Security sem Crítico/Alto aberto (se aplicável); designer ok (se UI)
-- [ ] `validation.md` do verifier com **PASS**
+- [ ] Nenhum arquivo do workflow no diff do PR (Art. 11.8)
+- [ ] `validation.md` do verifier com **PASS**, publicado como comentário no PR
 - [ ] `STATUS.md` com todos os gates registrados
 
 ### 12.2 Casca (antes do F4)
@@ -361,6 +369,7 @@ As convenções reais do projeto, mapeadas no `ARCHITECTURE.md`, **prevalecem** 
 - [ ] `:core:testing` com `MainDispatcherRule` e um teste exemplo passando
 - [ ] Todos os comandos do `CLAUDE.md` executam de verdade
 - [ ] CI verde no PR da casca; proteção de branch aplicada conforme o `DEPLOY-PLAN.md`
+- [ ] `.git/info/exclude` configurado e nenhum arquivo do workflow rastreado ou no diff (Art. 11.8)
 - [ ] `validation.md` do verifier com **PASS**
 
 ---
@@ -377,6 +386,11 @@ As convenções reais do projeto, mapeadas no `ARCHITECTURE.md`, **prevalecem** 
 
 ```
 <projeto-android>/
+├── app/  core/  feature/  build-logic/  gradle/ ...   ← o app: a ÚNICA coisa commitada
+├── .github/workflows/ci.yml                           ← CI do app (commitado)
+│
+│   ── daqui para baixo é LOCAL: ignorado via .git/info/exclude, nunca commitado (Art. 11.8) ──
+│
 ├── CONSTITUTION.md
 ├── CLAUDE.md                          ← gerado pelo tech-lead no F2
 ├── .claude/
@@ -385,22 +399,15 @@ As convenções reais do projeto, mapeadas no `ARCHITECTURE.md`, **prevalecem** 
 │   ├── skills/feature/SKILL.md        ← Cenário B
 │   ├── hooks/git_guard.py
 │   └── settings.json
-├── workflow/templates/                ← modelos de todos os artefatos
-└── docs/
+└── workflow/
+    ├── git-exclude.txt                ← lista oficial do que nunca é commitado
+    ├── templates/                     ← modelos dos artefatos
+    ├── github/                        ← modelos de corpo de issue e PR (usados com --body-file)
     ├── foundation/                    ← Cenário A (uma vez)
-    │   ├── STATUS.md
-    │   ├── BACKLOG.md
-    │   ├── ARCHITECTURE.md
-    │   ├── DEPLOY-PLAN.md
-    │   ├── validation.md
+    │   ├── STATUS.md  BACKLOG.md  ARCHITECTURE.md  DEPLOY-PLAN.md  validation.md
     │   └── adr/NNNN-titulo.md
     └── specs/<issue>-<slug>/          ← Cenário B (uma por ticket)
-        ├── STATUS.md
-        ├── ticket.md
-        ├── ui-spec.md
-        ├── plan.md
-        ├── security-report.md
-        └── validation.md
+        └── STATUS.md  ticket.md  ui-spec.md  plan.md  security-report.md  validation.md
 ```
 
 ---
@@ -417,3 +424,4 @@ As convenções reais do projeto, mapeadas no `ARCHITECTURE.md`, **prevalecem** 
 |--------|------|---------|
 | 1.0.0 | 2026-11-26 | Ratificação inicial: 11 papéis, 4 gates, S/M/L/C |
 | 2.0.0 | 2026-11-26 | Dois cenários (Fundação e Feature); papel planner; developer refina o ticket; gates F1–F4 e P0–P3; arquitetura fixa (SOLID, Clean, MVVM+MVI) e stack de bibliotecas; Definition of Ready; convenções de projeto existente prevalecem; testes de caracterização |
+| 2.1.0 | 2026-11-26 | Art. 11.8: o repositório é só do app; arquivos do workflow ficam locais (`.git/info/exclude`), concentrados em `workflow/`, bloqueados pelo guard; issue e PR viram o registro compartilhado; ajustes no F4 e na DoD |

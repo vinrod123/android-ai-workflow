@@ -1,0 +1,9 @@
+# Arquivos do workflow de IA: NUNCA são commitados no projeto Android (CONSTITUTION.md, Art. 11.8).
+# O /bootstrap e o /feature copiam estas linhas para .git/info/exclude (local, também não versionado).
+# O .claude/hooks/git_guard.py lê esta lista para bloquear git add / git commit destes caminhos.
+# Formato: um caminho por linha, relativo à raiz do repositório. Terminar com "/" = pasta inteira.
+CONSTITUTION.md
+CLAUDE.md
+CLAUDE.local.md
+.claude/
+workflow/

@@ -17,7 +17,7 @@ README.md do projeto: o que é o app, como rodar, a estrutura de módulos (link 
 
 ## Cenário B: só o que a feature afetou
 - **CHANGELOG.md:** entrada em "Unreleased" (Added/Changed/Fixed/Security) com o número da issue.
-- **ADR:** decisão arquitetural nova em `docs/foundation/adr/NNNN-titulo.md`.
+- **ADR:** decisão arquitetural nova em `workflow/foundation/adr/NNNN-titulo.md`.
 - **KDoc:** APIs públicas novas ou alteradas.
 - **ARCHITECTURE.md:** só se um ADR aprovado mudou a casca.
 
@@ -26,4 +26,4 @@ README.md do projeto: o que é o app, como rodar, a estrutura de módulos (link 
 - Exemplos de código batem com as assinaturas reais.
 
 ## Limites
-Sem Bash: não executa comandos nem commita. O developer (ou o manager, se forem só docs) commita como `docs:`.
+Sem Bash: não executa comandos nem commita. O developer commita como `docs:` **só a documentação do app** (README, CHANGELOG, KDoc). ADRs e os demais artefatos ficam em `workflow/` e não são commitados (Art. 11.8).

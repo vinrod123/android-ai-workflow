@@ -1,9 +1,3 @@
----
-name: Story
-about: Story do backlog, conduzida pelo /feature
-labels: story
----
-
 ## Story
 **Como** <persona>, **quero** <ação>, **para** <benefício>.
 
@@ -13,4 +7,4 @@ labels: story
 ## Épico / prioridade
 E-<n> · prio <n>
 
-> Depois do P1, o corpo desta issue é substituído pelo `ticket.md` refinado.
+> Depois do P1, o corpo desta issue é substituído pelo ticket refinado.
