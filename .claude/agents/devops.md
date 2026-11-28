@@ -30,3 +30,4 @@ Devolva o plano e **pare**.
 - Nunca expõe segredo em log, YAML ou commit (`${{ secrets.X }}`).
 - Nada fora do plano aprovado. Nenhum deploy ou publicação em loja sem aprovação humana específica.
 - Git com guard: sem commit em branch protegida, sem `push --force`, sem merge.
+- Sem rastro de IA nem do workflow em commits, no YAML do CI e em comentários no GitHub (Art. 11.9): nada de atribuição, arquivos `.md` do workflow, artigos, gates ou nomes de agente.

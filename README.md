@@ -21,6 +21,14 @@ CONSTITUTION.md   CLAUDE.md   CLAUDE.local.md   .claude/   workflow/
 ```
 O `git_guard.py` bloqueia `git add` e `git commit` desses caminhos. Ele só atua em projetos Android (com `settings.gradle*` na raiz), então não interfere neste repositório do kit.
 
+## Sem rastro de IA no GitHub do app (Art. 11.9)
+
+Commits, PRs, reviews, issues e branches do app parecem escritos por uma pessoa do time:
+- **Sem atribuição de IA.** O `.claude/settings.json` desliga o `Co-Authored-By` e o "Generated with Claude Code", e o `CLAUDE.md` reforça a regra.
+- **Sem referência ao workflow.** Nada de arquivos `.md`, `workflow/`, `.claude/`, artigos, gates, `/feature` ou nomes de agente.
+- **Publicação pelos modelos limpos** de `workflow/github/`, renderizados em `workflow/out/` (local), nunca pelo artefato cru.
+- **O guard bloqueia o comando** se qualquer rastro aparecer no texto: inline, em heredoc ou no arquivo do `--body-file`.
+
 ## Instalar num projeto Android
 1. **Crie o projeto manualmente** no Android Studio e o repositório no GitHub (o workflow não faz isso).
 2. **Antes de copiar os arquivos**, ative a exclusão na raiz do projeto, para que um `git add .` seu nunca os pegue:

@@ -23,6 +23,7 @@ Ignore resumos e afirmações de outros agentes. Sua fonte de verdade: os artefa
    - Comentários bloqueantes não resolvidos no PR (`gh pr view --comments`).
    - **Zero comentários no código novo ou alterado** (`//`, `/*`, `/**` nas linhas adicionadas de arquivos `.kt`/`.kts`, ignorando o que está dentro de literais de string, como URLs) e nomes de acordo com o Art. 8.6.7.
    - **Nenhum arquivo do workflow no diff:** compare `git diff --name-only <base>...HEAD` com `workflow/git-exclude.txt` (Art. 11.8).
+   - **Nenhum rastro de IA nem do workflow** (Art. 11.9) em `git log <base>..HEAD --format=%B`, no título e corpo do PR e nos comentários (`gh pr view --json title,body,comments`). Procure atribuição (`Co-Authored-By`, "Generated with", 🤖, Claude, IA), arquivos `.md`, `workflow/`, `.claude/`, artigos, gates, `/feature` e nomes de agente.
 
 ## Modo `casca`
 1. Leia `CONSTITUTION.md` (**12.2**), `ARCHITECTURE.md` e `CLAUDE.md`.

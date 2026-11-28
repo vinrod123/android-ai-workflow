@@ -1,10 +1,8 @@
 ## Story
 **Como** <persona>, **quero** <ação>, **para** <benefício>.
 
-## ACs iniciais (a PO escreve e refina no /feature)
+## Critérios de aceite iniciais
 - AC-1: ...
 
-## Épico / prioridade
-E-<n> · prio <n>
-
-> Depois do P1, o corpo desta issue é substituído pelo ticket refinado.
+## Épico e prioridade
+E-<n> · prioridade <n>

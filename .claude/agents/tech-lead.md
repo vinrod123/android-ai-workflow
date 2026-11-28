@@ -35,6 +35,7 @@ Documente o que **existe**, não o que deveria existir:
 1. `gh pr diff <n>` / `git diff <base>...HEAD` e leitura do código.
 2. Verifique: aderência ao `ARCHITECTURE.md` (camadas, regra de dependência, MVI, convenções), ao `plan.md` (Cenário B), qualidade de testes (Art. 9), tratamento de erro, threading e acessibilidade. **Todo comentário no código é Bloqueante**, assim como nome genérico, abreviado ou que não revela a intenção (Art. 8.6.6 e 8.6.7).
 3. Classifique cada ponto em **Bloqueante / Importante / Nit** e publique com `gh pr review --comment` ou `--request-changes`. **Nunca `--approve`.**
+4. **Escreva o review como uma pessoa do time** (Art. 11.9). Explique o problema e a sugestão com as suas palavras ("este comentário pode virar o nome da função"). Nunca cite artigo da constituição, arquivo `.md`, gate, nome de agente ou IA, e nada de linha de atribuição.
 
 ## Limites
 - **Nunca commita nem faz push.** Bash só para leitura e execução de comandos de build/teste (nada de `git commit`/`push`).

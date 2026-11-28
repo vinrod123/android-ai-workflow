@@ -1,6 +1,6 @@
 # CONSTITUIÇÃO DO WORKFLOW ANDROID
 
-> **Versão:** 3.0.0 · **Ratificada em:** 2026-11-26
+> **Versão:** 3.1.0 · **Ratificada em:** 2026-11-26
 > **Status:** Lei máxima do workflow. Todo agente, comando, hook e template deriva deste arquivo.
 > **Quem pode emendar:** somente um humano (Art. 15).
 
@@ -360,6 +360,23 @@ As convenções reais do projeto, mapeadas no `ARCHITECTURE.md`, **prevalecem** 
    - Os arquivos do workflow ficam só na máquina, ignorados por `.git/info/exclude` (que também não é versionado). O `/bootstrap` e o `/feature` configuram isso, e o `git_guard.py` bloqueia `git add` e `git commit` desses caminhos.
    - O que o time precisa ver vai para o GitHub como **texto**, não como arquivo: ticket e plano na issue, validação no PR.
    - Os artefatos locais não têm backup no repositório. Perder a máquina perde o `STATUS.md`; por isso o conteúdo essencial é sempre publicado na issue ou no PR.
+9. **Sem rastro de IA nem do workflow no GitHub do app.** Todo texto que um agente escreve no projeto Android parece escrito por uma pessoa do time. Isso vale para:
+   - mensagens de commit;
+   - título e descrição de PR;
+   - comentários e reviews de PR;
+   - título, corpo e comentários de issue;
+   - nomes de branch.
+
+   **Proibido nesses textos:**
+   - Atribuição de IA: `Co-Authored-By` de IA, "Generated with", "gerado por/com", 🤖, links para ferramentas de IA, e os nomes Claude, Anthropic, GPT, LLM, IA/AI.
+   - Referência ao workflow: qualquer arquivo `.md` (`ticket.md`, `plan.md`, `validation.md`, `CONSTITUTION.md`, `CLAUDE.md`...), os caminhos `workflow/` e `.claude/`, artigos da constituição ("Art. 8.6"), nomes de gate (F1–F4, P0–P3), comandos `/feature` e `/bootstrap`, e nomes de agente (product-owner, tech-lead, test-engineer, security-reviewer, docs-writer, engineering-manager, planner, verifier, refactorer).
+
+   **Como publicar:** o conteúdo vai para o GitHub sempre pelos modelos limpos de `workflow/github/`, nunca pelo artefato local cru. Um review explica o problema com as próprias palavras ("este comentário pode virar o nome da função"), nunca citando regra ("viola o Art. 8.6.6").
+
+   **Como é imposto:**
+   - O `.claude/settings.json` desliga a atribuição automática do Claude Code.
+   - O `CLAUDE.md` do projeto proíbe qualquer linha de atribuição, e essa instrução vale acima do padrão da ferramenta.
+   - O `git_guard.py` bloqueia `git commit`, `gh pr` e `gh issue` cujo texto, inline ou em arquivo, tenha qualquer um desses rastros.
 
 ---
 
@@ -374,7 +391,8 @@ As convenções reais do projeto, mapeadas no `ARCHITECTURE.md`, **prevalecem** 
 - [ ] Review do tech-lead sem bloqueantes
 - [ ] Security sem Crítico/Alto aberto (se aplicável); designer ok (se UI)
 - [ ] Nenhum arquivo do workflow no diff do PR (Art. 11.8)
-- [ ] `validation.md` do verifier com **PASS**, publicado como comentário no PR
+- [ ] Nenhum rastro de IA ou do workflow em commits, PR, comentários e issue (Art. 11.9)
+- [ ] `validation.md` do verifier com **PASS**, publicado como comentário no PR pelo modelo limpo
 - [ ] `STATUS.md` com todos os gates registrados
 
 ### 12.2 Casca (antes do F4)
@@ -385,6 +403,7 @@ As convenções reais do projeto, mapeadas no `ARCHITECTURE.md`, **prevalecem** 
 - [ ] Todos os comandos do `CLAUDE.md` executam de verdade
 - [ ] CI verde no PR da casca; proteção de branch aplicada conforme o `DEPLOY-PLAN.md`
 - [ ] `.git/info/exclude` configurado e nenhum arquivo do workflow rastreado ou no diff (Art. 11.8)
+- [ ] Nenhum rastro de IA ou do workflow em commits, PR e issues da casca (Art. 11.9)
 - [ ] `validation.md` do verifier com **PASS**
 
 ---
@@ -442,3 +461,4 @@ As convenções reais do projeto, mapeadas no `ARCHITECTURE.md`, **prevalecem** 
 | 2.1.0 | 2026-11-26 | Art. 11.8: o repositório é só do app; arquivos do workflow ficam locais (`.git/info/exclude`), concentrados em `workflow/`, bloqueados pelo guard; issue e PR viram o registro compartilhado; ajustes no F4 e na DoD |
 | 2.2.0 | 2026-11-26 | Art. 8.6.6–8.6.8: zero comentários no código (inclusive KDoc e testes) e nomes que revelam intenção segundo o Clean Code; AC referenciado no nome do teste |
 | 3.0.0 | 2026-11-26 | Refinamento passa do developer para a PO, antes de qualquer etapa do developer (mudança de papel = MAJOR, Art. 15.3); impacto no código passa para o planner; perguntas do planner voltam à PO. Ajustes da revisão: zero comentários vale no código novo ou alterado também em projeto existente; exceção de parâmetros para `@Composable`; nomes de teste em `androidTest/`; alcance da regra (`.kt`/`.kts`) e strings; item na DoD |
+| 3.1.0 | 2026-11-27 | Art. 11.9: nenhum rastro de IA nem do workflow em commits, PRs, comentários, issues e branches do app; publicação só pelos modelos limpos de `workflow/github/`; atribuição automática desligada; guard bloqueia rastros |

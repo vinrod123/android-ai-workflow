@@ -31,7 +31,7 @@ Crie a branch `chore/<issue>-casca` (a issue é criada no passo 3; até lá use 
 2. Chame o **product-owner** com essas respostas literais para produzir `workflow/foundation/BACKLOG.md` (template `workflow/templates/BACKLOG.md`).
 3. Repasse as perguntas abertas da PO ao humano, e as respostas de volta à PO, até não sobrar pergunta (máx. 3 rodadas, Art. 13.1).
 4. **■ F1:** apresente épicos, stories e prioridade e pergunte *"Aprova o backlog (F1)?"*. Registre no STATUS.
-5. Publique: uma issue por story (`gh issue create --body-file`, corpo no modelo `workflow/github/issue-story.md`, labels `story`, `epic:<nome>`, `prio:<n>`) e uma issue `chore: casca do projeto`. Anote os números no `BACKLOG.md`. Renomeie a branch para `chore/<issue-da-casca>-casca`.
+5. Publique: uma issue por story (`gh issue create --body-file`, corpo renderizado do modelo `workflow/github/issue-story.md` em `workflow/out/`, sem nenhum rastro de IA ou do workflow (Art. 11.9), labels `story`, `epic:<nome>`, `prio:<n>`) e uma issue `chore: casca do projeto`. Anote os números no `BACKLOG.md`. Renomeie a branch para `chore/<issue-da-casca>-casca`.
 
 ## 3. Casca (tech-lead) → F2
 Chame o **tech-lead** em modo `definir` (novo) ou `mapear` (existente), passando o `BACKLOG.md`. Ele entrega:
@@ -39,7 +39,7 @@ Chame o **tech-lead** em modo `definir` (novo) ou `mapear` (existente), passando
 - `workflow/foundation/adr/` com as decisões
 - `CLAUDE.md` preenchido (comandos reais)
 
-**■ F2:** resuma módulos, camadas, padrão MVI, bibliotecas e desvios (no modo mapeamento: divergências do Art. 8, como informação) e pergunte *"Aprova a casca (F2)?"*. Registre. **Nada disso é commitado** (Art. 11.8): publique na issue da casca um comentário com o resumo do `ARCHITECTURE.md` (módulos, camadas, bibliotecas e ADRs).
+**■ F2:** resuma módulos, camadas, padrão MVI, bibliotecas e desvios (no modo mapeamento: divergências do Art. 8, como informação) e pergunte *"Aprova a casca (F2)?"*. Registre. **Nada disso é commitado** (Art. 11.8): publique na issue da casca um comentário com o resumo da arquitetura (módulos, camadas, bibliotecas e decisões), escrito como texto do time: sem citar arquivos, o workflow ou IA (Art. 11.9).
 
 ## 4. Construção (developer): só no modo Novo
 Chame o **developer** em modo `casca` com o `ARCHITECTURE.md`. Ele constrói, roda build/testes/lint, commita e abre o PR da casca.
@@ -56,8 +56,11 @@ Depois da aprovação, chame o **devops** em modo `aplicar`. Confirme o CI verde
 Chame o **verifier** em modo `casca`, **sem** repassar resumos de outros agentes: só o caminho do `ARCHITECTURE.md`, do `CLAUDE.md` e do PR. FAIL → correções pelo developer/devops → verifier de novo (máx. 3, Art. 13.2).
 
 ## 7. ■ F4 e encerramento
-Com PASS: atualize o STATUS, publique o `validation.md` como comentário no PR (`gh pr comment --body-file`) e entregue ao humano o link do PR com o checklist do Art. 12.2. Diga claramente que **o merge é dele**.
+Com PASS: atualize o STATUS, publique a validação no PR pelo modelo `workflow/github/pr-validation.md` (`gh pr comment <n> --body-file workflow/out/<n>-validation.txt`) e entregue ao humano o link do PR com o checklist do Art. 12.2. Diga claramente que **o merge é dele**.
 Sem PR (modo mapeamento sem mudança de CI): publique a validação na issue da casca e peça a **confirmação explícita do F4**. Só depois dela feche a issue. Depois do merge, o projeto está liberado para o `/feature` na ordem de prioridade do `BACKLOG.md`.
 
+## Publicação no GitHub (Art. 11.9)
+Mesma regra do `/feature`: preencha o modelo de `workflow/github/`, salve em `workflow/out/` (local) e publique com `--body-file`. O texto não pode citar arquivo `.md`, `workflow/`, `.claude/`, artigos, gates, `/feature`, `/bootstrap`, nomes de agente nem IA, e não leva linha de atribuição. Se o `git_guard.py` bloquear, corrija o texto.
+
 ## Proibições
-`gh pr merge`, `gh pr review --approve`, `push --force`, commit em branch protegida, **commitar qualquer arquivo do workflow** (Art. 11.8), escrever código, aplicar mudança de repositório sem F3, dispensar F4.
+`gh pr merge`, `gh pr review --approve`, `push --force`, commit em branch protegida, **commitar qualquer arquivo do workflow** (Art. 11.8), **deixar rastro de IA ou do workflow no GitHub** (Art. 11.9), escrever código, aplicar mudança de repositório sem F3, dispensar F4.

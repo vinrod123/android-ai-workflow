@@ -15,6 +15,10 @@ Bloqueia (exit 2):
   - git add de caminho do workflow, ou git add -f/--force
   - git add amplo (., -A, --all) sem o .git/info/exclude configurado
   - git commit com arquivo do workflow no stage (ou rastreado, com -a)
+  Art. 11.9 (sem rastro de IA nem do workflow no GitHub do app):
+  - mensagem de commit, título/corpo/comentário de PR e issue, ou nome de branch
+    com atribuição de IA, arquivo .md, pasta do workflow, artigo, gate, comando
+    ou nome de agente (texto inline, em heredoc ou no arquivo de --body-file / -F)
 
 A lista de caminhos do workflow vem de workflow/git-exclude.txt (com fallback interno).
 Exit codes: 0 = liberado · 2 = bloqueado (o motivo vai para o stderr e o Claude lê).
@@ -57,6 +61,33 @@ BRANCH_RULES = [
 ]
 
 BROAD_ADD = {".", "-A", "--all", ":/", "*", "-u", "--update"}
+
+TRACE_RULES = [
+    (re.compile(r"co-authored-by", re.I), "linha Co-Authored-By"),
+    (re.compile(r"generated (with|by)|gerad[oa]s? (com|por|pel[oa])", re.I), "frase de geração automática"),
+    (re.compile(r"\bclaude\b|anthropic", re.I), "menção ao Claude/Anthropic"),
+    (re.compile(r"\b(chat)?gpt\b|openai|copilot|\bllms?\b", re.I), "menção a ferramenta de IA"),
+    (re.compile(r"\bIA\b|\bAI\b"), "menção a IA"),
+    (re.compile("\U0001F916"), "emoji de robô"),
+    (re.compile(r"\.md\b", re.I), "arquivo .md"),
+    (re.compile(r"(?<![\w.-])(workflow|\.claude)/", re.I), "pasta do workflow"),
+    (re.compile(r"constitui[çc][ãa]o|constitution", re.I), "constituição do workflow"),
+    (re.compile(r"\bart\.\s?\d", re.I), "artigo da constituição"),
+    (re.compile(r"\bgates?\b", re.I), "gate do workflow"),
+    (re.compile(r"\b(F[1-4]|P[0-3])\b"), "código de gate"),
+    (re.compile(r"(?<![\w/])/(feature|bootstrap)\b", re.I), "comando do workflow"),
+    (re.compile(r"\b(product-owner|tech-lead|test-engineer|security-reviewer|docs-writer|"
+                r"engineering-manager|refactorer|planner|verifier|sub-?agent\w*)\b", re.I),
+     "nome de agente"),
+]
+
+SEPARATORS = {"&&", "||", ";", "|", "&"}
+COMMIT_OPTS = {"-m": "text", "--message": "text", "-F": "file", "--file": "file"}
+GH_OPTS = {"-t": "text", "--title": "text", "-b": "text", "--body": "text",
+           "-F": "file", "--body-file": "file"}
+BRANCH_OPTS = {"-b": "text", "-B": "text", "-c": "text", "-C": "text"}
+GH_TEXT_ACTIONS = {"create", "edit", "comment", "review"}
+HEREDOC_RE = re.compile(r"<<-?\s*(['\"]?)(\w+)\1[^\n]*\n(.*?)\n[ \t]*\2[ \t]*(?=\n|$)", re.S)
 
 
 # ----------------------------------------------------------------------------- util
@@ -183,6 +214,90 @@ def check_workflow_isolation(command, cwd, pats):
                   + ". Tire do stage com 'git restore --staged <arquivo>'.", command)
 
 
+# ----------------------------------------------------------------------- Art. 11.9
+
+def tokenize(command):
+    try:
+        lexer = shlex.shlex(command, posix=True, punctuation_chars=";&|")
+        lexer.whitespace_split = True
+        return list(lexer)
+    except ValueError:
+        return command.split()
+
+
+def read_text_file(path, cwd):
+    full = path if os.path.isabs(path) else os.path.join(cwd or os.getcwd(), path)
+    try:
+        with open(full, encoding="utf-8", errors="ignore") as f:
+            return f.read()
+    except OSError:
+        return ""
+
+
+def collect_option_values(tokens, start, options, cwd):
+    texts = []
+    k = start
+    while k < len(tokens) and tokens[k] not in SEPARATORS:
+        token = tokens[k]
+        option, has_equals, value = token.partition("=")
+        if options is COMMIT_OPTS and re.fullmatch(r"-[a-zA-Z]*m", option) and option != "-m":
+            option = "-m"
+        if option.startswith("-") and option in options:
+            if not has_equals:
+                value = tokens[k + 1] if k + 1 < len(tokens) else ""
+                k += 1
+            if options[option] == "file":
+                if value != "-":
+                    texts.append(read_text_file(value, cwd))
+            else:
+                texts.append(value)
+        k += 1
+    return texts, k
+
+
+def published_texts(command, cwd):
+    heredoc_bodies = [m.group(3) for m in HEREDOC_RE.finditer(command)]
+    tokens = tokenize(HEREDOC_RE.sub(" \n", command))
+    texts = []
+    publishes = False
+    i = 0
+    while i < len(tokens):
+        if tokens[i] == "git":
+            j = i + 1
+            while j < len(tokens) and tokens[j] in ("-C", "-c"):
+                j += 2
+            sub = tokens[j] if j < len(tokens) else ""
+            if sub == "commit":
+                publishes = True
+                found, i = collect_option_values(tokens, j + 1, COMMIT_OPTS, cwd)
+                texts += found
+                continue
+            if sub in ("checkout", "switch"):
+                found, i = collect_option_values(tokens, j + 1, BRANCH_OPTS, cwd)
+                texts += found
+                continue
+        if (tokens[i] == "gh" and i + 2 < len(tokens)
+                and tokens[i + 1] in ("pr", "issue") and tokens[i + 2] in GH_TEXT_ACTIONS):
+            publishes = True
+            found, i = collect_option_values(tokens, i + 3, GH_OPTS, cwd)
+            texts += found
+            continue
+        i += 1
+    if publishes:
+        texts += heredoc_bodies
+    return texts
+
+
+def check_no_trace(command, cwd):
+    for text in published_texts(command, cwd):
+        for pattern, label in TRACE_RULES:
+            match = pattern.search(text)
+            if match:
+                block(f"rastro de IA ou do workflow no texto publicado ({label}: '{match.group(0)}'). "
+                      "Commits, PRs, issues e branches do app não podem ter isso (Art. 11.9). "
+                      "Reescreva o texto como uma pessoa do time escreveria.", command)
+
+
 # ---------------------------------------------------------------------------- main
 
 def main():
@@ -215,6 +330,7 @@ def main():
                     block(f"{reason} (HEAD = {branch})", command)
 
     check_workflow_isolation(command, cwd, load_workflow_paths(root))
+    check_no_trace(command, cwd)
     sys.exit(0)
 
 

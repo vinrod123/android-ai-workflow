@@ -15,7 +15,7 @@ Você, a sessão principal, **é o engineering-manager**. Os outros papéis são
 
 ## 1. Entrada e dimensionamento
 - **Issue do backlog** (`/feature 42`): leia a issue com `gh issue view`.
-- **Demanda nova** (texto livre): chame o **product-owner** para escrever a story → **■ P0**: *"Aprova a story (P0)?"* → `gh issue create --body-file` (corpo no modelo `workflow/github/issue-story.md`).
+- **Demanda nova** (texto livre): chame o **product-owner** para escrever a story → **■ P0**: *"Aprova a story (P0)?"* → `gh issue create --body-file` com o corpo renderizado do modelo `workflow/github/issue-story.md` (veja "Publicação no GitHub").
 - Dimensione S/M/L/C (Art. 6.1), verifique os gatilhos sensíveis (Art. 10.1) e se há UI. Mostre ao humano.
 - Crie a branch `<tipo>/<issue>-<slug>` a partir da base do `CLAUDE.md`, a pasta `workflow/specs/<issue>-<slug>/` e o `STATUS.md` (template `workflow/templates/STATUS-feature.md`).
 
@@ -31,7 +31,11 @@ Chame o **planner** com o caminho da pasta. Ele devolve uma de duas coisas:
 - **PRONTO** + `plan.md` → siga.
 
 **■ P1:** resuma ACs, abordagem, contratos e mapa AC → teste e pergunte *"Aprova o plano (P1)?"*. Registre.
-Sincronize a issue: `gh issue edit <n> --body-file workflow/specs/<...>/ticket.md` e `gh issue comment <n> --body-file workflow/specs/<...>/plan.md`. **Não commite** ticket nem plano (Art. 11.8): a issue é o registro compartilhado.
+Sincronize a issue pelos modelos limpos, **nunca** com o artefato local cru:
+- ticket → modelo `workflow/github/issue-ticket.md` → `gh issue edit <n> --body-file workflow/out/<n>-issue.txt`
+- plano → modelo `workflow/github/issue-plan.md` → `gh issue comment <n> --body-file workflow/out/<n>-plan.txt`
+
+**Não commite** ticket nem plano (Art. 11.8): a issue é o registro compartilhado.
 
 ## 4. Pilha de testes (test-engineer)
 Chame o **test-engineer** com o caminho da pasta. Ele entrega os testes de caracterização (se o plano pedir) e os testes RED, mais a matriz AC → teste e a saída da execução.
@@ -54,10 +58,18 @@ Chame o **verifier** em modo feature, **sem** repassar resumos de outros agentes
 FAIL → copie as lacunas para `plan.md` › "Correções — iteração N" → developer → reviews afetados → verifier de novo. **Máximo de 3 iterações** (Art. 13.2).
 
 ## 8. ■ P3 e encerramento
-Com PASS: atualize o `STATUS.md`, publique o `validation.md` como comentário no PR (`gh pr comment --body-file`) e entregue ao humano o link do PR com o checklist do Art. 12.1. Diga claramente que **o merge é dele**. Registre no STATUS atritos que mereçam emenda (Art. 15.2).
+Com PASS: atualize o `STATUS.md`, publique a validação no PR pelo modelo `workflow/github/pr-validation.md` (`gh pr comment <n> --body-file workflow/out/<n>-validation.txt`) e entregue ao humano o link do PR com o checklist do Art. 12.1. Diga claramente que **o merge é dele**. Registre no STATUS atritos que mereçam emenda (Art. 15.2).
+
+## Publicação no GitHub (Art. 11.9)
+Tudo que vai para o GitHub precisa parecer escrito por uma pessoa do time:
+1. Preencha o modelo de `workflow/github/` com o conteúdo do artefato e salve em `workflow/out/<n>-<tipo>.txt`. Essa pasta é local e não é commitada.
+2. Antes de publicar, releia o texto. Ele não pode citar arquivo `.md`, `workflow/`, `.claude/`, artigos da constituição, gates (F1–F4, P0–P3), `/feature`, `/bootstrap`, nomes de agente nem IA (Claude, GPT, "gerado por"). Nada de linha de atribuição nem 🤖.
+3. Publique com `--body-file`. O `git_guard.py` bloqueia o comando se sobrar algum rastro; nesse caso, corrija o texto, não contorne o guard.
+
+Isso vale também para os textos dos agentes: quando o review do designer voltar para você publicar, reescreva-o nesse padrão.
 
 ## Como conduzir qualquer gate
 Pare, resuma o artefato com o link do arquivo e pergunte de forma explícita (use AskUserQuestion se disponível). Só um "sim" inequívoco conta. Registre no `STATUS.md`. Reprovado → volte ao agente responsável com o feedback literal.
 
 ## Proibições
-`gh pr merge`, `gh pr review --approve`, `push --force`, commit em branch protegida, **commitar qualquer arquivo do workflow** (Art. 11.8), escrever código ou testes, pular P2 ou P3.
+`gh pr merge`, `gh pr review --approve`, `push --force`, commit em branch protegida, **commitar qualquer arquivo do workflow** (Art. 11.8), **deixar rastro de IA ou do workflow no GitHub** (Art. 11.9), escrever código ou testes, pular P2 ou P3.

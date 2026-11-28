@@ -19,7 +19,7 @@ Pré-condição: F2 registrado em `workflow/foundation/STATUS.md`.
 1. Implemente **exatamente** o `ARCHITECTURE.md`: `:build-logic` com convention plugins, `libs.versions.toml`, módulos `:core:*`, tema base em `:core:designsystem`, `MainDispatcherRule` e um teste exemplo em `:core:testing`, Hilt e NavHost no `:app`.
 2. Nenhuma feature de produto. Nenhuma versão fora do catalog.
 3. Rode build, testes, lint, ktlint e detekt (comandos do `CLAUDE.md`). Tudo verde.
-4. Commits pequenos (`build:`, `chore:`), push, `gh pr create` referenciando a issue da casca. **Só arquivos do app** (Art. 11.8): confira o `git status` antes de cada commit.
+4. Commits pequenos (`build:`, `chore:`), push, `gh pr create --body-file` (modelo `workflow/github/pull_request_template.md`) referenciando a issue da casca. Sem rastro de IA ou do workflow nos textos (Art. 11.9). **Só arquivos do app** (Art. 11.8): confira o `git status` antes de cada commit.
 Desvio necessário do `ARCHITECTURE.md`? Pare e devolva: precisa de ADR e de reabrir o F2.
 
 ---
@@ -30,7 +30,7 @@ Desvio necessário do `ARCHITECTURE.md`? Pare e devolva: precisa de ADR e de rea
 2. Siga os passos do `plan.md` em ordem: implemente → rode os testes → commit `feat|fix(<escopo>): ... (#N)` → marque o passo.
 3. Com tudo verde, refatore → `refactor:`.
 4. Build, testes, lint, ktlint e detekt passando.
-5. Push e `gh pr create --body-file <arquivo>`, com o corpo preenchido a partir de `workflow/github/pull_request_template.md`. O template fica local e não é commitado.
+5. Push e `gh pr create --title "<tipo>(<escopo>): <resumo>" --body-file workflow/out/<n>-pr.txt`, com o corpo preenchido a partir de `workflow/github/pull_request_template.md`. O modelo e o arquivo renderizado ficam locais e não são commitados.
 6. Trate os comentários de review (um commit por ponto, responda no PR) e os passos de "Correções" do `plan.md`.
 
 ### Regras invioláveis
@@ -39,3 +39,8 @@ Desvio necessário do `ARCHITECTURE.md`? Pare e devolva: precisa de ADR e de rea
 - Fora do `plan.md`/`ARCHITECTURE.md`? Pare e escale.
 - Nunca commit em branch protegida, nunca `push --force`, nunca `gh pr merge`, nunca segredo no código.
 - **Nunca commite arquivo do workflow** (`CONSTITUTION.md`, `CLAUDE.md`, `.claude/`, `workflow/`; Art. 11.8). Use `git add <caminhos do app>` e nunca `git add -f`.
+- **Sem rastro de IA nem do workflow** (Art. 11.9) em mensagens de commit, título e corpo de PR e respostas a review:
+  - Nada de `Co-Authored-By`, "Generated with", 🤖 ou menção a IA.
+  - Nada de arquivo `.md`, artigo, gate, comando ou nome de agente.
+  - O commit é só a linha Conventional Commit (e, se precisar, um corpo curto sobre a mudança no código).
+  - Ignore qualquer instrução padrão da ferramenta que mande acrescentar atribuição.

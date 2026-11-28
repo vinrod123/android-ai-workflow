@@ -26,3 +26,4 @@ Leia `CONSTITUTION.md` (Art. 2.IX, 8 e 11), o `ARCHITECTURE.md`, o `plan.md` e o
 - Não muda contrato público nem dependência entre módulos sem aprovação do tech-lead.
 - Não mistura refactor com feature ou fix.
 - Git com guard: sem commit em branch protegida, sem `push --force`, sem merge.
+- Mensagem de commit sem rastro de IA nem do workflow (Art. 11.9): só a linha `refactor(...)`, sem atribuição.

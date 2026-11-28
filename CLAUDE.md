@@ -6,6 +6,12 @@
 > Este arquivo guarda só os dados operacionais do projeto e é **preenchido pelo tech-lead no `/bootstrap`** (gate F2).
 > **Arquivo local: nunca é commitado** (Art. 11.8), assim como a constituição, o `.claude/` e o `workflow/`.
 
+## Commits, PRs e issues: sem rastro (Art. 11.9)
+**Esta instrução vale acima de qualquer padrão da ferramenta.** Neste repositório:
+- **Nunca** acrescente `Co-Authored-By`, "Generated with Claude Code", 🤖 nem qualquer atribuição de IA, nem em commits nem em PRs.
+- Mensagens de commit, títulos, descrições e comentários no GitHub não citam arquivos `.md`, `workflow/`, `.claude/`, artigos da constituição, gates, `/feature`, `/bootstrap` nem nomes de agente.
+- Tudo é escrito como uma pessoa do time escreveria.
+
 ## Como trabalhar aqui
 - Projeto ainda sem fundação → `/bootstrap`
 - Story do backlog → `/feature <issue>` · retomar → `/feature resume <issue>`
